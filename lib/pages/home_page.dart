@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:linkie/providers/link_data_provider.dart';
 import 'package:linkie/utils/helpers.dart';
-import 'package:linkie/widgets/my_circular_progress_indicator_widget.dart';
+import 'package:linkie/utils/validators.dart';
+import 'package:linkie/widgets/inputs/primary_text_field.dart';
+import 'package:linkie/widgets/indicators/my_circular_progress_indicator_widget.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -11,90 +13,93 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.sunny)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.history)),
-        ],
-      ),
-      body: Center(
-        child: ListView(
-          padding: const EdgeInsets.all(26.0),
-          shrinkWrap: true,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // text
-                _heading(context, screenSize),
-                _subTitle(context, screenSize),
-                spacer(height: 8.0),
-
-                // text field
-                _textField(context, screenSize),
-                spacer(height: 20.0),
-
-                // button
-                _generateButton()
-              ],
-            ),
+        appBar: AppBar(
+          actions: [
+            IconButton(onPressed: () {}, icon: const Icon(Icons.sunny)),
+            IconButton(onPressed: () {}, icon: const Icon(Icons.history)),
           ],
         ),
-      ),
-    );
-  }
+        body: Consumer<LinkDataProvider>(
+          builder: (context, value, child) {
+            // done loading, move to preview page
+            if (value.state == LinkDataState.complete) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                Navigator.pushNamed(context, '/preview');
+              });
+            }
 
-  SizedBox _textField(BuildContext context, Size screenSize) {
-    return SizedBox(
-      width: screenSize.width > 768 ? screenSize.width * 0.5 : double.maxFinite,
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: 'Enter a URL',
-          hintText: 'www.example.com',
-          filled: true,
-          fillColor: Theme.of(context).colorScheme.secondaryContainer,
-        ),
-      ),
-    );
-  }
+            // error
+            if (value.state == LinkDataState.error) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                ScaffoldMessenger.of(context).clearSnackBars();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(value.errorMessage)),
+                );
+              });
+            }
 
-  Consumer<LinkDataProvider> _generateButton() {
-    return Consumer<LinkDataProvider>(
-      builder: (context, value, child) {
-        if (value.state == LinkDataState.complete) {
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            Navigator.pushNamed(context, '/preview');
-          });
-        }
+            return Center(
+              child: ListView(
+                padding: const EdgeInsets.all(26.0),
+                shrinkWrap: true,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // text
+                      _heading(context, screenSize),
+                      _subTitle(context, screenSize),
+                      spacer(height: 8.0),
 
-        return Hero(
-          tag: 'primary-button',
-          child: TextButton(
-            onPressed: () {
-              value.fetchLinkData('https://gcascs.ac.in/');
-            },
-            style: TextButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                primary: Theme.of(context).colorScheme.onPrimary,
-                padding: const EdgeInsets.all(22)),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Flexible(child: Text('Generate')),
-                spacer(width: 8.0),
-                Flexible(
-                  child: value.state == LinkDataState.loading
-                      ? const MyCircularProgressIndicator()
-                      : const Icon(Icons.chevron_right),
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
+                      // text field
+                      SizedBox(
+                        width: screenSize.width > 768
+                            ? screenSize.width * 0.5
+                            : double.maxFinite,
+                        child: PrimaryTextField(
+                          formKey: value.formKey,
+                          controller: value.urlController,
+                          validator: (str) => validateURL(str),
+                          labelText: 'Enter a URL',
+                          hintText: 'https://example.com',
+                        ),
+                      ),
+
+                      spacer(height: 20.0),
+
+                      // button
+                      Hero(
+                        tag: 'primary-button',
+                        child: TextButton(
+                          onPressed: () => value.fetchLinkData(),
+                          style: TextButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              primary: Theme.of(context).colorScheme.onPrimary,
+                              padding: const EdgeInsets.all(22)),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Flexible(child: Text('Generate')),
+                              spacer(width: 8.0),
+                              Flexible(
+                                child: value.state == LinkDataState.loading
+                                    ? const MyCircularProgressIndicator()
+                                    : const Icon(Icons.chevron_right),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ));
   }
 
   Text _heading(BuildContext context, Size screenSize) {

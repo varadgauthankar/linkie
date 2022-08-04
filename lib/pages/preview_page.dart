@@ -20,6 +20,13 @@ class PreviewPage extends StatelessWidget {
         //
         body: Consumer<LinkDataProvider>(
           builder: (context, value, child) {
+            if (value.linkData == null) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/', (route) => false);
+              });
+            }
+
             return Center(
               // main outer column, including card and share button
               child: Column(
@@ -38,70 +45,67 @@ class PreviewPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12.0),
                         color: Theme.of(context).colorScheme.background,
                       ),
-                      child: Flexible(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            // image
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: Image.network(
-                                value.linkData?.image ?? '',
-                                fit: BoxFit.fitWidth,
-                                width: screenSize.width * .25,
-                              ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // image
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              value.linkData?.image ?? '',
+                              fit: BoxFit.fitWidth,
+                              width: screenSize.width * .25,
                             ),
-                            spacer(height: 12.0),
+                          ),
+                          spacer(height: 12.0),
 
-                            // title
-                            Text(
-                              value.linkData?.title ?? '',
-                              maxLines: 2,
+                          // title
+                          Text(
+                            value.linkData?.title ?? '',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              height: 1,
+                              fontWeight: FontWeight.bold,
+                              fontSize: _getScreenWidth(screenSize) * .045,
+                            ),
+                          ),
+                          spacer(height: 8.0),
+
+                          // description
+                          Flexible(
+                            child: Text(
+                              value.linkData?.description ?? '',
+                              maxLines: 4,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                height: 1,
-                                fontWeight: FontWeight.bold,
-                                fontSize: _getScreenWidth(screenSize) * .045,
+                                height: 1.1,
+                                fontSize: _getScreenWidth(screenSize) * .033,
                               ),
                             ),
-                            spacer(height: 8.0),
+                          ),
+                          spacer(height: 8.0),
 
-                            // description
-                            Flexible(
-                              child: Text(
-                                value.linkData?.description ?? '',
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
+                          // link chip
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: ActionChip(
+                              onPressed: () {},
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.tertiary,
+                              label: Text(
+                                value.linkData?.domain ?? '',
                                 style: TextStyle(
-                                  height: 1.1,
-                                  fontSize: _getScreenWidth(screenSize) * .033,
+                                  decoration: TextDecoration.underline,
+                                  color:
+                                      Theme.of(context).colorScheme.onTertiary,
+                                  fontSize: 12,
                                 ),
                               ),
                             ),
-                            spacer(height: 8.0),
-
-                            // link chip
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: ActionChip(
-                                onPressed: () {},
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.tertiary,
-                                label: Text(
-                                  value.linkData?.domain ?? '',
-                                  style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onTertiary,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

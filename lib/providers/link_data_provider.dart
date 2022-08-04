@@ -13,19 +13,34 @@ enum LinkDataState {
 class LinkDataProvider extends ChangeNotifier {
   LinkDataState _state = LinkDataState.initial;
   LinkDataState get state => _state;
-  LinkData? linkData;
 
-  void fetchLinkData(String url) async {
-    _setLinkDataState(LinkDataState.loading);
-    try {
-      Dio dio = await MyDio.provideDio();
-      final response = await dio.post('/get-url-data', data: {'url': url});
-      linkData = LinkData.fromJson(response.data['data']);
+  LinkData? _linkData;
+  LinkData? get linkData => _linkData;
 
-      _setLinkDataState(LinkDataState.complete);
-    } on DioError catch (e) {
-      _setLinkDataState(LinkDataState.error);
-      print(e.response?.data['error']);
+  String _errorMessage = '';
+  String get errorMessage => _errorMessage;
+
+  final TextEditingController _urlController = TextEditingController();
+  TextEditingController get urlController => _urlController;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> get formKey => _formKey;
+
+  void fetchLinkData() async {
+    if (formKey.currentState!.validate()) {
+      _setLinkDataState(LinkDataState.loading);
+      try {
+        Dio dio = await MyDio.provideDio();
+        final response = await dio.post('/get-url-data', data: {
+          'url': _urlController.text.trim(),
+        });
+        _linkData = LinkData.fromJson(response.data['data']);
+
+        _setLinkDataState(LinkDataState.complete);
+      } on DioError catch (e) {
+        _errorMessage = e.response?.data['error'];
+        _setLinkDataState(LinkDataState.error);
+      }
     }
   }
 
