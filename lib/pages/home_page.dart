@@ -64,26 +64,25 @@ class HomePage extends StatelessWidget {
 
                 spacer(height: 20.0),
                 // button
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PreviewPage()),
-                    );
-                  },
-                  style: TextButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      primary: Theme.of(context).colorScheme.onPrimary,
-                      padding: const EdgeInsets.all(22)),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text('Generate'),
-                      spacer(width: 8.0),
-                      const Icon(Icons.chevron_right)
-                    ],
+                Hero(
+                  tag: 'primary-button',
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/preview');
+                    },
+                    style: TextButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        primary: Theme.of(context).colorScheme.onPrimary,
+                        padding: const EdgeInsets.all(22)),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Flexible(child: Text('Generate')),
+                        spacer(width: 8.0),
+                        const Flexible(child: Icon(Icons.chevron_right))
+                      ],
+                    ),
                   ),
                 )
               ],
