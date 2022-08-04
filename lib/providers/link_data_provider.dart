@@ -21,7 +21,7 @@ class LinkDataProvider extends ChangeNotifier {
       Dio dio = await MyDio.provideDio();
       final response = await dio.post('/get-url-data', data: {'url': url});
       linkData = LinkData.fromJson(response.data['data']);
-      print(linkData?.image);
+
       _setLinkDataState(LinkDataState.complete);
     } on DioError catch (e) {
       _setLinkDataState(LinkDataState.error);
