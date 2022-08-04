@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:linkie/pages/preview_page.dart';
+import 'package:linkie/providers/link_data_provider.dart';
 import 'package:linkie/utils/helpers.dart';
+import 'package:linkie/widgets/my_circular_progress_indicator_widget.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,67 +26,17 @@ class HomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // heading
-                Text(
-                  'Linkie',
-                  style: TextStyle(
-                    height: 0.8,
-                    fontSize: (screenSize.width + screenSize.height) * 0.05,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
-                // subtitle
-                Text(
-                  'Generate link previews!',
-                  style: TextStyle(
-                    fontSize: (screenSize.width + screenSize.height) * 0.02,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                ),
-
+                // text
+                _heading(context, screenSize),
+                _subTitle(context, screenSize),
                 spacer(height: 8.0),
 
                 // text field
-                SizedBox(
-                  width: screenSize.width > 768
-                      ? screenSize.width * 0.5
-                      : double.maxFinite,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Enter a URL',
-                      hintText: 'www.example.com',
-                      filled: true,
-                      fillColor:
-                          Theme.of(context).colorScheme.secondaryContainer,
-                    ),
-                  ),
-                ),
-
+                _textField(context, screenSize),
                 spacer(height: 20.0),
+
                 // button
-                Hero(
-                  tag: 'primary-button',
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/preview');
-                    },
-                    style: TextButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        primary: Theme.of(context).colorScheme.onPrimary,
-                        padding: const EdgeInsets.all(22)),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Flexible(child: Text('Generate')),
-                        spacer(width: 8.0),
-                        const Flexible(child: Icon(Icons.chevron_right))
-                      ],
-                    ),
-                  ),
-                )
+                _generateButton()
               ],
             ),
           ],
@@ -92,4 +44,79 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+
+  SizedBox _textField(BuildContext context, Size screenSize) {
+    return SizedBox(
+      width: screenSize.width > 768 ? screenSize.width * 0.5 : double.maxFinite,
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: 'Enter a URL',
+          hintText: 'www.example.com',
+          filled: true,
+          fillColor: Theme.of(context).colorScheme.secondaryContainer,
+        ),
+      ),
+    );
+  }
+
+  Consumer<LinkDataProvider> _generateButton() {
+    return Consumer<LinkDataProvider>(
+      builder: (context, value, child) {
+        if (value.state == LinkDataState.complete) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            Navigator.pushNamed(context, '/preview');
+          });
+        }
+
+        return Hero(
+          tag: 'primary-button',
+          child: TextButton(
+            onPressed: () {
+              value.fetchLinkData('https://gcascs.ac.in/');
+            },
+            style: TextButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                primary: Theme.of(context).colorScheme.onPrimary,
+                padding: const EdgeInsets.all(22)),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Flexible(child: Text('Generate')),
+                spacer(width: 8.0),
+                Flexible(
+                  child: value.state == LinkDataState.loading
+                      ? const MyCircularProgressIndicator()
+                      : const Icon(Icons.chevron_right),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Text _heading(BuildContext context, Size screenSize) {
+    return Text(
+      'Linkie',
+      style: TextStyle(
+        height: 0.8,
+        fontSize: (screenSize.width + screenSize.height) * 0.05,
+        fontWeight: FontWeight.w600,
+        color: Theme.of(context).colorScheme.tertiary,
+      ),
+    );
+  }
+}
+
+Widget _subTitle(BuildContext context, Size screenSize) {
+  return Text(
+    'Generate link previews!',
+    style: TextStyle(
+      fontSize: (screenSize.width + screenSize.height) * 0.02,
+      fontWeight: FontWeight.w500,
+      color: Theme.of(context).colorScheme.onBackground,
+    ),
+  );
 }

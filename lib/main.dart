@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:linkie/pages/home_page.dart';
 import 'package:linkie/pages/preview_page.dart';
-import 'package:sizer/sizer.dart';
+import 'package:linkie/providers/link_data_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,8 +13,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Sizer(builder: ((context, orientation, deviceType) {
-      return MaterialApp(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LinkDataProvider()),
+      ],
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         initialRoute: '/',
@@ -25,7 +29,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorSchemeSeed: const Color(0xff6750a4),
         ),
-      );
-    }));
+      ),
+    );
   }
 }
