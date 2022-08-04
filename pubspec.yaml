@@ -33,6 +33,8 @@ dependencies:
     sdk: flutter
   provider: ^6.0.3
   sizer: ^2.0.15
+  url_launcher: ^6.1.5
+  validators: ^3.0.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
