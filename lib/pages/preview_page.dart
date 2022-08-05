@@ -37,13 +37,15 @@ class PreviewPage extends StatelessWidget {
                     elevation: 8,
                     shadowColor: Colors.black87,
                     borderRadius: BorderRadius.circular(12.0),
+                    color: Theme.of(context).colorScheme.background,
+                    surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
                     child: Container(
                       width: _getScreenWidth(screenSize),
                       padding: const EdgeInsets.symmetric(
                           vertical: 12.0, horizontal: 22.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
-                        color: Theme.of(context).colorScheme.background,
+                        // color: Theme.of(context).colorScheme.background,
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -124,7 +126,7 @@ class PreviewPage extends StatelessWidget {
                             child: SvgPicture.asset(
                               "assets/twitter.svg",
                               height: 20,
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.onPrimary,
                             ),
                           )
                         ],
@@ -176,7 +178,7 @@ class PreviewPage extends StatelessWidget {
         child: Image.network(
           url,
           fit: BoxFit.fitWidth,
-          width: screenSize.width * .25,
+          width: screenSize.width * .4,
           errorBuilder: (context, error, stackTrace) {
             return _buildCircularAvatar(context, domain);
           },

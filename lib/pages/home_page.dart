@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:linkie/providers/link_data_provider.dart';
+import 'package:linkie/providers/theme_provider.dart';
 import 'package:linkie/utils/helpers.dart';
 import 'package:linkie/utils/validators.dart';
 import 'package:linkie/widgets/inputs/primary_text_field.dart';
@@ -15,7 +16,17 @@ class HomePage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.sunny)),
+            IconButton(
+              onPressed: () {
+                Provider.of<ThemeProvider>(context, listen: false)
+                    .toggleTheme();
+              },
+              icon: Icon(
+                Theme.of(context).brightness == Brightness.light
+                    ? Icons.brightness_2
+                    : Icons.sunny,
+              ),
+            ),
           ],
         ),
         body: Consumer<LinkDataProvider>(
@@ -23,7 +34,12 @@ class HomePage extends StatelessWidget {
             // done loading, move to preview page
             if (value.state == LinkDataState.complete) {
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                Navigator.pushNamed(context, '/preview');
+                // just a quick workaround to fix bug, short of time
+                // literally have entrance exams in 4 days :(
+                if (!value.navigated) {
+                  Navigator.pushNamed(context, '/preview');
+                  value.setNavigated();
+                }
               });
             }
 

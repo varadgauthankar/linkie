@@ -26,7 +26,15 @@ class LinkDataProvider extends ChangeNotifier {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   GlobalKey<FormState> get formKey => _formKey;
 
+  bool navigated = false;
+
+  void setNavigated() {
+    navigated = true;
+    notifyListeners();
+  }
+
   void fetchLinkData() async {
+    navigated = false;
     if (formKey.currentState!.validate()) {
       _setLinkDataState(LinkDataState.loading);
       try {
