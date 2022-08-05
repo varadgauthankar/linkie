@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:linkie/providers/link_data_provider.dart';
 import 'package:linkie/utils/helpers.dart';
+import 'package:linkie/widgets/indicators/my_circular_progress_indicator_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PreviewPage extends StatelessWidget {
   const PreviewPage({Key? key}) : super(key: key);
@@ -20,6 +22,7 @@ class PreviewPage extends StatelessWidget {
         //
         body: Consumer<LinkDataProvider>(
           builder: (context, value, child) {
+            // if user navigates to /preview directly, go to /
             if (value.linkData == null) {
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                 Navigator.pushNamedAndRemoveUntil(
@@ -51,15 +54,13 @@ class PreviewPage extends StatelessWidget {
                         children: [
                           // image
 
-                          if (value.linkData?.image != null)
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: Image.network(
-                                value.linkData?.image ?? '',
-                                fit: BoxFit.fitWidth,
-                                width: screenSize.width * .25,
-                              ),
-                            ),
+                          _buildImage(
+                            context,
+                            value.linkData?.image,
+                            screenSize: screenSize,
+                            domain: value.linkData?.domain ?? '',
+                          ),
+
                           spacer(height: 12.0),
 
                           // title
@@ -90,22 +91,11 @@ class PreviewPage extends StatelessWidget {
                           spacer(height: 8.0),
 
                           // link chip
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: ActionChip(
-                              onPressed: () {},
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.tertiary,
-                              label: Text(
-                                value.linkData?.domain ?? '',
-                                style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  color:
-                                      Theme.of(context).colorScheme.onTertiary,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
+                          _buildDomainChip(
+                            context,
+                            value.linkData?.domain ?? '',
+                            url: value.linkData?.url ?? '',
+                            faviconUrl: value.linkData?.favicon ?? '',
                           ),
                         ],
                       ),
@@ -118,6 +108,7 @@ class PreviewPage extends StatelessWidget {
                     tag: 'primary-button',
                     child: TextButton(
                       onPressed: () {
+                        print(value.linkData?.url);
                         // Navigator.pushNamed(context, '/preview');
                       },
                       style: TextButton.styleFrom(
@@ -141,6 +132,69 @@ class PreviewPage extends StatelessWidget {
             );
           },
         ));
+  }
+
+  Widget _buildDomainChip(
+    BuildContext context,
+    String domain, {
+    required String url,
+    required String faviconUrl,
+  }) {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: ActionChip(
+        avatar: CircleAvatar(
+          backgroundColor: Colors.white,
+          foregroundImage: NetworkImage(faviconUrl),
+          radius: 12,
+        ),
+        onPressed: () async {
+          await launchUrl(Uri.parse(url), webOnlyWindowName: '_blank');
+        },
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        label: Text(
+          domain,
+          style: TextStyle(
+            decoration: TextDecoration.underline,
+            color: Theme.of(context).colorScheme.onTertiary,
+            fontSize: 12,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImage(BuildContext context, String? url,
+      {required Size screenSize, required String domain}) {
+    if (url != null) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(8.0),
+        child: Image.network(
+          url,
+          fit: BoxFit.fitWidth,
+          width: screenSize.width * .25,
+          errorBuilder: (context, error, stackTrace) {
+            return _buildCircularAvatar(context, domain);
+          },
+          loadingBuilder: ((context, child, loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            }
+            return const MyCircularProgressIndicator();
+          }),
+        ),
+      );
+    } else {
+      return _buildCircularAvatar(context, domain);
+    }
+  }
+
+  CircleAvatar _buildCircularAvatar(BuildContext context, String domain) {
+    return CircleAvatar(
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+      child: Text(domain[0]),
+    );
   }
 
   double _getScreenWidth(Size screenSize) {
