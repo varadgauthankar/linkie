@@ -50,14 +50,16 @@ class PreviewPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           // image
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              value.linkData?.image ?? '',
-                              fit: BoxFit.fitWidth,
-                              width: screenSize.width * .25,
+
+                          if (value.linkData?.image != null)
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.network(
+                                value.linkData?.image ?? '',
+                                fit: BoxFit.fitWidth,
+                                width: screenSize.width * .25,
+                              ),
                             ),
-                          ),
                           spacer(height: 12.0),
 
                           // title
