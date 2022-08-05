@@ -143,7 +143,7 @@ class PreviewPage extends StatelessWidget {
 
   double _getScreenWidth(Size screenSize) {
     if (screenSize.width < 481) {
-      return 300;
+      return screenSize.width * .9;
     } else {
       if (screenSize.width > 481 && screenSize.width < 768) {
         return 400;
