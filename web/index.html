@@ -39,9 +39,6 @@
     <title>linkie</title>
     <link rel="manifest" href="manifest.json" />
 
-    <!-- my css -->
-    <link rel="stylesheet" href="styles.css" />
-
     <!-- <script>
       window.flutterWebRenderer = "html";
     </script> -->
@@ -53,10 +50,7 @@
     <!-- This script adds the flutter initialization JS code -->
     <script src="flutter.js" defer></script>
   </head>
-  <body style="overflow: hidden">
-    <div id="loading-indicator" class="container">
-      <progress class="pure-material-progress-circular" />
-    </div>
+  <body>
     <script>
       window.addEventListener("load", function (ev) {
         // Download main.dart.js
@@ -73,16 +67,6 @@
             return appRunner.runApp();
           });
       });
-    </script>
-    <script>
-      window.onload = function () {
-        setTimeout(function () {
-          var loadingIndicator = document.getElementById("loading-indicator");
-          if (loadingIndicator) {
-            loadingIndicator.remove();
-          }
-        }, 4000);
-      };
     </script>
   </body>
 </html>
