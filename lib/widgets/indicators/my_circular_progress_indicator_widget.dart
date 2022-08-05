@@ -8,8 +8,8 @@ class MyCircularProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 10,
-      width: 10,
+      height: 14,
+      width: 14,
       child: CircularProgressIndicator(
         color: darkColor
             ? Theme.of(context).colorScheme.primary

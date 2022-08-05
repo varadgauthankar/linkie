@@ -79,15 +79,21 @@ class HomePage extends StatelessWidget {
                               primary: Theme.of(context).colorScheme.onPrimary,
                               padding: const EdgeInsets.all(22)),
                           child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            // crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               const Flexible(child: Text('Generate')),
                               spacer(width: 8.0),
                               Flexible(
                                 child: value.state == LinkDataState.loading
-                                    ? const MyCircularProgressIndicator()
-                                    : const Icon(Icons.chevron_right),
+                                    ? Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          spacer(width: 4.0),
+                                          const MyCircularProgressIndicator(),
+                                        ],
+                                      )
+                                    : const Icon(Icons.chevron_right, size: 18),
                               )
                             ],
                           ),
