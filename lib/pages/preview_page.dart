@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:linkie/providers/link_data_provider.dart';
 import 'package:linkie/utils/helpers.dart';
 import 'package:linkie/widgets/indicators/my_circular_progress_indicator_widget.dart';
@@ -108,8 +109,9 @@ class PreviewPage extends StatelessWidget {
                     tag: 'primary-button',
                     child: TextButton(
                       onPressed: () {
-                        print(value.linkData?.url);
-                        // Navigator.pushNamed(context, '/preview');
+                        launchUrl(Uri.parse(
+                          'https://twitter.com/intent/tweet?text=${value.linkData?.title ?? ''}\n\n${value.linkData?.description ?? ''}&url=${value.linkData?.url ?? ''}',
+                        ));
                       },
                       style: TextButton.styleFrom(
                           backgroundColor:
@@ -122,7 +124,13 @@ class PreviewPage extends StatelessWidget {
                         children: [
                           const Flexible(child: Text('Share')),
                           spacer(width: 8.0),
-                          const Flexible(child: Icon(Icons.share, size: 16))
+                          Flexible(
+                            child: SvgPicture.asset(
+                              "assets/twitter.svg",
+                              height: 20,
+                              color: Colors.white,
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -184,9 +192,8 @@ class PreviewPage extends StatelessWidget {
           }),
         ),
       );
-    } else {
-      return _buildCircularAvatar(context, domain);
     }
+    return const SizedBox.shrink();
   }
 
   CircleAvatar _buildCircularAvatar(BuildContext context, String domain) {
