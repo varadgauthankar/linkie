@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         builder: (context, value, child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
+            title: 'Linkie',
             initialRoute: '/',
             routes: {
               '/': (context) => const HomePage(),
