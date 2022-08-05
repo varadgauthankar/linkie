@@ -15,11 +15,7 @@ class PreviewPage extends StatelessWidget {
 
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: AppBar(
-          actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.history)),
-          ],
-        ),
+        appBar: AppBar(),
         //
         body: Consumer<LinkDataProvider>(
           builder: (context, value, child) {

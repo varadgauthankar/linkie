@@ -16,7 +16,6 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           actions: [
             IconButton(onPressed: () {}, icon: const Icon(Icons.sunny)),
-            IconButton(onPressed: () {}, icon: const Icon(Icons.history)),
           ],
         ),
         body: Consumer<LinkDataProvider>(
