@@ -178,7 +178,7 @@ class PreviewPage extends StatelessWidget {
         child: Image.network(
           url,
           fit: BoxFit.fitWidth,
-          width: screenSize.width * .4,
+          width: _getScreenWidth(screenSize) * .4,
           errorBuilder: (context, error, stackTrace) {
             return _buildCircularAvatar(context, domain);
           },
@@ -186,7 +186,11 @@ class PreviewPage extends StatelessWidget {
             if (loadingProgress == null) {
               return child;
             }
-            return const MyCircularProgressIndicator();
+            return const MyCircularProgressIndicator(
+              darkColor: true,
+              width: 18,
+              height: 18,
+            );
           }),
         ),
       );
