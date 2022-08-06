@@ -1,16 +1,20 @@
-# linkie
+<img src="/assets/ic_launcher.png" width="100px"/>
 
-A new Flutter project.
+# Linkie
 
-## Getting Started
+A link previewer, build for the [FindCoder.io](https://findcoder.io) challenge.
 
-This project is a starting point for a Flutter application.
+[TRY ON WEB](https://linkie-link-previewer.netlify.app/#/)
 
-A few resources to get you started if this is your first Flutter project:
+### Server:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+The server is build using Node js. [Cheerio](https://www.npmjs.com/package/cheerio) package is used to fetch the website data.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[varadgauthankar/linkie-server](https://github.com/varadgauthankar/linkie-server)
+
+## Screenshots
+
+<img src="/screenshots/linkie3.png" width="400px"/>
+<img src="/screenshots/linkie4.png" width="400px"/>
+<img src="/screenshots/linkie2.png" width="400px"/>
+<img src="/screenshots/linkie1.png" width="400px"/>
