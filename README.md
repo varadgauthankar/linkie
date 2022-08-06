@@ -4,13 +4,13 @@
 
 A link previewer, build for the [FindCoder.io](https://findcoder.io) challenge.
 
-[TRY ON WEB](https://linkie-link-previewer.netlify.app/#/)
+<a href="https://linkie-link-previewer.netlify.app/#/" target="_blank"> TRY ON WEB </a>
 
 ### Server:
 
 The server is build using Node js. [Cheerio](https://www.npmjs.com/package/cheerio) package is used to fetch the website data.
 
-[varadgauthankar/linkie-server](https://github.com/varadgauthankar/linkie-server)
+<a href="https://github.com/varadgauthankar/linkie-server" target="_blank">varadgauthankar/linkie-server</a>
 
 ## Screenshots
 
